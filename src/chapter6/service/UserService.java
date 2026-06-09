@@ -123,8 +123,12 @@ public class UserService {
 	    Connection connection = null;
 	    try {
 	        // パスワード暗号化
+	    	if (user.getPassword() != null && !user.getPassword().isEmpty()) {
 	        String encPassword = CipherUtil.encrypt(user.getPassword());
 	        user.setPassword(encPassword);
+	    	} else {
+	    		user.setPassword(null);
+	    	}
 
 	        connection = getConnection();
 	        new UserDao().update(connection, user);
