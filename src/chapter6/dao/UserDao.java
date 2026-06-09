@@ -209,7 +209,7 @@ public class UserDao {
 			ps.setString(1, user.getAccount());
 			ps.setString(2, user.getName());
 			ps.setString(3, user.getEmail());
-			if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+			if (user.getPassword() != null && !StringUtils.isBlank(user.getPassword())) {
 				ps.setString(4, user.getPassword());
 				ps.setString(5, user.getDescription());
 				ps.setInt(6, user.getId());

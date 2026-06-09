@@ -140,10 +140,7 @@ public class UserService {
 			if (user.getPassword() != null && !StringUtils.isBlank(user.getPassword())) {
 				String encPassword = CipherUtil.encrypt(user.getPassword());
 				user.setPassword(encPassword);
-			} else {
-				user.setPassword("");
-			}
-
+			} 
 			connection = getConnection();
 			new UserDao().update(connection, user);
 			commit(connection);
