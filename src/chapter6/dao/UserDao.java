@@ -11,34 +11,38 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.exception.SQLRuntimeException;
 import chapter6.logging.InitApplication;
 
 public class UserDao {
-	
+
 	/**
-    * ロガーインスタンスの生成
-    */
+	* ロガーインスタンスの生成
+	*/
 	Logger log = Logger.getLogger("twitter");
-	
+
 	/**
 	 * デフォルトコンストラクタ
 	 * アプリケーションの初期化を実施する。
 	 */
-	public UserDao(){
+	public UserDao() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
 	}
-	
+
 	/**
 	 * ユーザー登録
 	 */
 	public void insert(Connection connection, User user) {
-		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
-		
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
@@ -51,34 +55,38 @@ public class UserDao {
 			sql.append("    created_date, ");
 			sql.append("    updated_date ");
 			sql.append(") VALUES ( ");
-			sql.append("    ?, ");                  // account
-			sql.append("    ?, ");                  // name
-			sql.append("    ?, ");                  // email
-			sql.append("    ?, ");                  // password
-			sql.append("    ?, ");                  // description
-			sql.append("    CURRENT_TIMESTAMP, ");  // created_date
-			sql.append("    CURRENT_TIMESTAMP ");   // updated_date
+			sql.append("    ?, "); // account
+			sql.append("    ?, "); // name
+			sql.append("    ?, "); // email
+			sql.append("    ?, "); // password
+			sql.append("    ?, "); // description
+			sql.append("    CURRENT_TIMESTAMP, "); // created_date
+			sql.append("    CURRENT_TIMESTAMP "); // updated_date
 			sql.append(")");
-			
+
 			ps = connection.prepareStatement(sql.toString());
 
-            ps.setString(1, user.getAccount());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getDescription());
-            
-            ps.executeUpdate();
+			ps.setString(1, user.getAccount());
+			ps.setString(2, user.getName());
+			ps.setString(3, user.getEmail());
+			ps.setString(4, user.getPassword());
+			ps.setString(5, user.getDescription());
+
+			ps.executeUpdate();
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw new SQLRuntimeException(e);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
 		}
 	}
+
 	public User select(Connection connection, String accountOrEmail, String password) {
-		log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
-				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
 
 		PreparedStatement ps = null;
 		try {
@@ -96,13 +104,14 @@ public class UserDao {
 			if (users.isEmpty()) {
 				return null;
 			} else if (2 <= users.size()) {
-				log.log(Level.SEVERE,"ユーザーが重複しています", new IllegalStateException());
+				log.log(Level.SEVERE, "ユーザーが重複しています", new IllegalStateException());
 				throw new IllegalStateException("ユーザーが重複しています");
 			} else {
 				return users.get(0);
 			}
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
@@ -113,8 +122,10 @@ public class UserDao {
 	 * 検索結果（ResultSet）をUserクラスのリストに変換します。
 	 */
 	private List<User> toUsers(ResultSet rs) throws SQLException {
-		log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
-				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
 
 		List<User> users = new ArrayList<User>();
 		try {
@@ -136,83 +147,88 @@ public class UserDao {
 			close(rs);
 		}
 	}
-	
+
 	public User select(Connection connection, int id) {
 
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
 
-	    log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
-	    " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		PreparedStatement ps = null;
+		try {
+			String sql = "SELECT * FROM users WHERE id = ?";
 
-	    PreparedStatement ps = null;
-	    try {
-	        String sql = "SELECT * FROM users WHERE id = ?";
+			ps = connection.prepareStatement(sql);
 
-	        ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
 
-	        ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
 
-	        ResultSet rs = ps.executeQuery();
-
-	        List<User> users = toUsers(rs);
-	        if (users.isEmpty()) {
-	            return null;
-	        } else if (2 <= users.size()) {
-	    		log.log(Level.SEVERE, "ユーザーが重複しています", new IllegalStateException());
-	            throw new IllegalStateException("ユーザーが重複しています");
-	        } else {
-	            return users.get(0);
-	        }
-	    } catch (SQLException e) {
-		  log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw new SQLRuntimeException(e);
-	    } finally {
-	        close(ps);
-	    }
+			List<User> users = toUsers(rs);
+			if (users.isEmpty()) {
+				return null;
+			} else if (2 <= users.size()) {
+				log.log(Level.SEVERE, "ユーザーが重複しています", new IllegalStateException());
+				throw new IllegalStateException("ユーザーが重複しています");
+			} else {
+				return users.get(0);
+			}
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
 	}
-	
+
 	public void update(Connection connection, User user) {
 
-	    log.info(new Object(){}.getClass().getEnclosingClass().getName() + 
-	    " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
 
-	    PreparedStatement ps = null;
-	    try {
-	    	boolean isPasswordUpdate = (user.getPassword() != null);
-	    	
-	        StringBuilder sql = new StringBuilder();
-	        sql.append("UPDATE users SET ");
-	        sql.append("    account = ?, ");
-	        sql.append("    name = ?, ");
-	        sql.append("    email = ?, ");
-	        if (isPasswordUpdate) {
-	            sql.append("    password = ?, ");
-	        }
-	        sql.append("    description = ?, ");
-	        sql.append("    updated_date = CURRENT_TIMESTAMP ");
-	        sql.append("WHERE id = ?");
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE users SET ");
+			sql.append("    account = ?, ");
+			sql.append("    name = ?, ");
+			sql.append("    email = ?, ");
+			if (user.getPassword() != null && !StringUtils.isBlank(user.getPassword())) {
+				sql.append("    password = ?, ");
+			}
+			sql.append("    description = ?, ");
+			sql.append("    updated_date = CURRENT_TIMESTAMP ");
+			sql.append("WHERE id = ?");
 
-	        ps = connection.prepareStatement(sql.toString());
-	        
-	        int index = 1;
-	        ps.setString(index++, user.getAccount());
-	        ps.setString(index++, user.getName());
-	        ps.setString(index++, user.getEmail());
-	        if (isPasswordUpdate) {
-	            ps.setString(index++, user.getPassword());
-	        }
-	        ps.setString(index++, user.getDescription());
-	        ps.setInt(index++, user.getId());
+			ps = connection.prepareStatement(sql.toString());
 
-	        int count = ps.executeUpdate();
-	        if (count == 0) {
-	    		log.log(Level.SEVERE,"更新対象のレコードが存在しません", new NoRowsUpdatedRuntimeException());
-	            throw new NoRowsUpdatedRuntimeException();
-	        }
-	    } catch (SQLException e) {
-		  log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw new SQLRuntimeException(e);
-	    } finally {
-	        close(ps);
-	    }
+			ps.setString(1, user.getAccount());
+			ps.setString(2, user.getName());
+			ps.setString(3, user.getEmail());
+			if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+				ps.setString(4, user.getPassword());
+				ps.setString(5, user.getDescription());
+				ps.setInt(6, user.getId());
+			} else {
+				ps.setString(4, user.getDescription());
+				ps.setInt(5, user.getId());
+			}
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				log.log(Level.SEVERE, "更新対象のレコードが存在しません", new NoRowsUpdatedRuntimeException());
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
 	}
 }
