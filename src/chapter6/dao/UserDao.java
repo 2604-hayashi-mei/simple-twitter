@@ -201,7 +201,7 @@ public class UserDao {
 			if (users.isEmpty()) {
 				return null;
 			} else if (2 <= users.size()) {
-				throw new IllegalStateException("すでに存在するアカウントです");
+				throw new IllegalStateException("ユーザーが重複しています");
 			} else {
 				return users.get(0);
 			}
