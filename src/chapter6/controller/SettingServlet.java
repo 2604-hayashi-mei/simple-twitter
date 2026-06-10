@@ -123,6 +123,13 @@ public class SettingServlet extends HttpServlet {
 			errorMessages.add("アカウント名を入力してください");
 		} else if (20 < account.length()) {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
+		} else {
+			//重複チェック
+			User diplicateUser = new UserService().select(account);
+			//同じアカウント名が存在し、自分のアカウント名以外の場合
+			if (diplicateUser != null && diplicateUser.getId() != user.getId()) {
+				errorMessages.add("すでに存在するアカウントです");
+			}
 		}
 		if (StringUtils.isEmpty(email)) {
 			errorMessages.add("メールアドレスを入力してください");
