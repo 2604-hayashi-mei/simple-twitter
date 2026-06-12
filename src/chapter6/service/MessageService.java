@@ -115,4 +115,62 @@ public class MessageService {
 			close(connection);
 		}
 	}
+	
+	/**
+	 * つぶやきを1件だけ取得する（編集画面表示用）
+	 * @param id つぶやきID
+	 * @return 取得したつぶやきデータ（Message型）
+	 */
+	public Message selectTweet(int id) {
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+		}.getClass().getEnclosingMethod().getName());
+		
+		Connection connection = null;
+		try {
+			//データベース扉開く
+			connection = getConnection();
+			//Daoに命令
+			Message message = new MessageDao().selectTweet(connection, id);
+			//戻り値をサーブレットに渡す
+			return message;
+		} catch (RuntimeException e) {
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+	/**
+	 * つぶやきを新しい文章に上書き保存する
+	 * @param message 新しい本文とIDが入ったMessage型の箱
+	 */
+	public void update(Message message) {
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+		}.getClass().getEnclosingMethod().getName());
+		
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			//Daoにupdate文実行命令
+			new MessageDao().update(connection, message);
+			commit(connection);
+		}catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		}catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		}finally {
+			close(connection);
+		}
+	}
 }

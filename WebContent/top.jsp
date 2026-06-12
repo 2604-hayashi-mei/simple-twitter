@@ -69,19 +69,28 @@
 						</a>
 						</span> <span class="name"><c:out value="${message.name}" /></span>
 					</div>
-					<div class="text">
-						<c:out value="${message.text}" />
-					</div>
+
+					<div class="text" style="white-space: pre-wrap;"><c:out value="${message.text}" /></div>
+
 					<div class="date">
 						<fmt:formatDate value="${message.createdDate}"
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 					<c:if test="${ loginUser.id == message.userId }">
-						<div class="delete-area">
-							<form action="deleteMessage" method="post">
-								<input type="hidden" name="id" value="${message.id}">
-								<input type="submit" value="削除">
+						<div class="action-area">
+
+							<form action="edit" method="get">
+								<input type="hidden" name="id" value="${message.id}"> 
+								<br /><input type="submit" value="編集">
 							</form>
+
+							<div class="delete-area" style="display: inline-block;">
+								<form action="deleteMessage" method="post" style="margin: 0;">
+									<input type="hidden" name="id" value="${message.id}"> <input
+										type="submit" value="削除">
+								</form>
+							</div>
+
 						</div>
 					</c:if>
 				</div>
