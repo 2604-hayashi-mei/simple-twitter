@@ -86,8 +86,8 @@
 
 							<div class="delete-area" style="display: inline-block;">
 								<form action="deleteMessage" method="post" style="margin: 0;">
-									<input type="hidden" name="id" value="${message.id}"> <input
-										type="submit" value="削除">
+									<input type="hidden" name="id" value="${message.id}">
+									<input type="submit" value="削除">
 								</form>
 							</div>
 

@@ -13,13 +13,13 @@ import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
 
 @WebServlet(urlPatterns = { "/deleteMessage" })
-public class DeleteTweetServlet extends HttpServlet {
+public class DeleteServlet extends HttpServlet {
 	/**
 	 * ロガーインスタンスの生成
 	 */
 	Logger log = Logger.getLogger("twitter");
 
-	public DeleteTweetServlet() {
+	public DeleteServlet() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
 	}
@@ -35,17 +35,11 @@ public class DeleteTweetServlet extends HttpServlet {
 
 		String idParam = request.getParameter("id");
 
-		if (idParam != null) {
-			try {
-				//int型に変換
-				int tweetId = Integer.parseInt(idParam);
-				//サービス呼び出して命令
-				new MessageService().delete(tweetId);
-			} catch (NumberFormatException e) {
-				log.warning("不正なつぶやきIDが送信されました" + idParam);
-			}
+		//int型に変換
+		int tweetId = Integer.parseInt(idParam);
+		//サービス呼び出して命令
+		new MessageService().delete(tweetId);
 
-		}
 		//処理が終わったらトップへ
 		response.sendRedirect("./");
 	}

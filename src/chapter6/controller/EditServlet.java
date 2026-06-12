@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -36,28 +37,33 @@ public class EditServlet extends HttpServlet {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
+		//IDキャッチ
+		String messageIdParam = request.getParameter("id");
+		if (messageIdParam == null || messageIdParam.isEmpty() || !messageIdParam.matches("^[0-9]+$")) {
+			List<String> errorMessages = new ArrayList<String>();
+			errorMessages.add("不正なパラメータが入力されました");
 
-		String idParam = request.getParameter("id");
-		if (idParam == null || idParam.isEmpty()) {
-			redirectWithErrorMessage(request, response);
+			HttpSession session = request.getSession();
+			session.setAttribute("errorMessages", errorMessages);
+			response.sendRedirect("./");
 			return;
 		}
-		try {
-			//ID変換
-			int tweetId = Integer.parseInt(idParam);
-			//サービス呼び出し
-			Message message = new MessageService().selectTweet(tweetId);
+		//ID変換
+		int tweetId = Integer.parseInt(messageIdParam);
+		//サービス呼び出し
+		Message message = new MessageService().select(tweetId);
 
-			if (message == null) {
-				redirectWithErrorMessage(request, response);
-				return;
-			}
-
-			request.setAttribute("message", message);
-			request.getRequestDispatcher("/edit.jsp").forward(request, response);
-		} catch (NumberFormatException e) {
-			redirectWithErrorMessage(request, response);
+		if (message == null) {
+			List<String> errorMessages = new ArrayList<String>();
+			errorMessages.add("不正なパラメータが入力されました");
+			request.getSession().setAttribute("errorMessages", errorMessages);
+			response.sendRedirect("./");
+			return;
 		}
+
+		request.setAttribute("message", message);
+		request.getRequestDispatcher("/edit.jsp").forward(request, response);
+
 	}
 
 	/**
@@ -72,61 +78,35 @@ public class EditServlet extends HttpServlet {
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
-		//文字化け防止
-		request.setCharacterEncoding("UTF-8");
-
-		String idParam = request.getParameter("id");
+		String messageIdParam = request.getParameter("id");
 		String text = request.getParameter("text");
 
-		if (idParam != null && text != null) {
-			try {
-				//文字列をint型に変換
-				int tweetId = Integer.parseInt(idParam);
+		if (messageIdParam != null && text != null) {
 
-				List<String> errorMessages = new ArrayList<String>();
+			//文字列をint型に変換
+			int tweetId = Integer.parseInt(messageIdParam);
 
-				if (isValid(text, errorMessages) == true) {
-					Message message = new Message();
-					message.setId(tweetId);
-					message.setText(text);
-					new MessageService().update(message);
+			List<String> errorMessages = new ArrayList<String>();
 
-					response.sendRedirect("./");
-					return;
-				} else {
-					//テキストとID詰めなおし
-					Message message = new Message();
-					message.setId(tweetId);
-					message.setText(text);
+			if (!isValid(text, errorMessages)) {
+				//テキストとID詰めなおし
+				Message message = new Message();
+				message.setId(tweetId);
+				message.setText(text);
 
-					request.setAttribute("message", message);
-					request.setAttribute("errorMessages", errorMessages);
+				request.setAttribute("message", message);
+				request.setAttribute("errorMessages", errorMessages);
 
-					request.getRequestDispatcher("/edit.jsp").forward(request, response);
-					return;
-				}
-			} catch (NumberFormatException e) {
-				redirectWithErrorMessage(request, response);
+				request.getRequestDispatcher("/edit.jsp").forward(request, response);
 				return;
 			}
+			Message message = new Message();
+			message.setId(tweetId);
+			message.setText(text);
+			new MessageService().update(message);
+
+			response.sendRedirect("./");
 		}
-		response.sendRedirect("./");
-	}
-
-	private void redirectWithErrorMessage(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-
-		log.info(new Object() {
-		}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {
-				}.getClass().getEnclosingMethod().getName());
-
-		java.util.List<String> errorMessages = new java.util.ArrayList<String>();
-		errorMessages.add("不正なパラメータが入力されました");
-
-		request.getSession().setAttribute("errorMessages", errorMessages);
-
-		response.sendRedirect("./");
 	}
 
 	private boolean isValid(String text, List<String> errorMessages) {
@@ -138,7 +118,8 @@ public class EditServlet extends HttpServlet {
 
 		if (StringUtils.isBlank(text)) {
 			errorMessages.add("メッセージを入力してください");
-		} else if (140 < text.length()) { // 140文字超えチェック
+			// 140文字超えチェック
+		} else if (140 < text.length()) {
 			errorMessages.add("140文字以下で入力してください");
 		}
 

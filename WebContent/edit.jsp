@@ -32,11 +32,11 @@
 			<form action="edit" method="post">
 
 				<input type="hidden" name="id" value="${message.id}">
-				<textarea name="text" cols="100" rows="5" class="tweet-box"><c:out
-						value="${message.text}" /></textarea>
-
-				<br /> <input type="submit" value="更新"> 
-				<a href="${pageContext.request.contextPath}/" style="margin-left: 10px;">戻る</a>
+				<textarea name="text" cols="100" rows="5" class="tweet-box"><c:out value="${message.text}" /></textarea>
+				<br /> <input type="submit" value="更新">
+				<%-- エラーメッセージ残らないように --%>
+				<a href="${pageContext.request.contextPath}/"
+					style="margin-left: 10px;">戻る</a>
 			</form>
 		</div>
 		<div class="copyright">Copyright(c)HayashiMei</div>
