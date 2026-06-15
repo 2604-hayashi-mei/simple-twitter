@@ -37,9 +37,9 @@ public class EditServlet extends HttpServlet {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
-		
+
 		List<String> errorMessages = new ArrayList<String>();
-		
+
 		//IDキャッチ
 		String messageId = request.getParameter("id");
 		if (StringUtils.isBlank(messageId) || !messageId.matches("^[0-9]+$")) {
@@ -82,25 +82,25 @@ public class EditServlet extends HttpServlet {
 		String messageId = request.getParameter("id");
 		String text = request.getParameter("text");
 
-			//文字列をint型に変換
-			int tweetId = Integer.parseInt(messageId);
-			List<String> errorMessages = new ArrayList<String>();
+		//文字列をint型に変換
+		int tweetId = Integer.parseInt(messageId);
+		List<String> errorMessages = new ArrayList<String>();
 
-			if (!isValid(text, errorMessages)) {
+		if (!isValid(text, errorMessages)) {
 
-				request.setAttribute("id", messageId);
-				request.setAttribute("errorMessages", errorMessages);
+			request.setAttribute("id", messageId);
+			request.setAttribute("errorMessages", errorMessages);
 
-				request.getRequestDispatcher("/edit.jsp").forward(request, response);
-				return;
-			}
-			Message message = new Message();
-			message.setId(tweetId);
-			message.setText(text);
-			new MessageService().update(message);
-
-			response.sendRedirect("./");
+			request.getRequestDispatcher("/edit.jsp").forward(request, response);
+			return;
 		}
+		Message message = new Message();
+		message.setId(tweetId);
+		message.setText(text);
+		new MessageService().update(message);
+
+		response.sendRedirect("./");
+	}
 
 	private boolean isValid(String text, List<String> errorMessages) {
 

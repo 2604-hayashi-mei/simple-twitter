@@ -63,11 +63,12 @@
 			<c:forEach items="${messages}" var="message">
 				<div class="message">
 					<div class="account-name">
-						<span class="account"> <a
-							href="./?user_id=<c:out value="${message.userId}"/> "> 
+						<span class="account"> 
+						<a href="./?user_id=<c:out value="${message.userId}"/> ">
 							<c:out value="${message.account}" />
 						</a>
-						</span> <span class="name"><c:out value="${message.name}" /></span>
+						</span>
+						<span class="name"><c:out value="${message.name}" /></span>
 					</div>
 
 					<div class="text" style="white-space: pre-wrap;"><c:out value="${message.text}" /></div>
@@ -76,18 +77,42 @@
 						<fmt:formatDate value="${message.createdDate}"
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
+					<div class="comments-area"
+						style="margin-left: 30px; background-color: #f9f9f9; padding: 5px 10px; border-radius: 5px;">
+						<c:forEach items="${comments}" var="comment">
+							<c:if test="${comment.messageId == message.id}">
+								<div class="comment"
+									style="border-top: 1px dashed #eee; padding: 5px 0;">
+									<span style="font-size: 0.8em; color: #555;">返信:</span>
+								<div class="comment-text"
+										style="white-space: pre-wrap; font-size: 0.9em;">
+										<c:out value="${comment.text}" />
+									</div>
+								</div>
+							</c:if>
+						</c:forEach>
+					</div>
+					<c:if test="${ not empty loginUser }">
+						<div class="comment-form-area" style="margin-left: 30px; margin-top: 10px;">
+							<form action="comment" method="post" style="margin: 0;">
+								<input type="hidden" name="messageId" value="${message.id}">
+								<input type="text" name="text" placeholder="返信を入力..." size="60" required>
+								<input type="submit" value="返信">
+							</form>
+						</div>
+					</c:if>
 					<c:if test="${ loginUser.id == message.userId }">
 						<div class="action-area">
 
 							<form action="edit" method="get">
-								<input type="hidden" name="id" value="${message.id}"> 
-								<br /><input type="submit" value="編集">
+								<input type="hidden" name="id" value="${message.id}"> <br />
+								<input type="submit" value="編集">
 							</form>
 
 							<div class="delete-area" style="display: inline-block;">
 								<form action="deleteMessage" method="post" style="margin: 0;">
-									<input type="hidden" name="id" value="${message.id}">
-									<input type="submit" value="削除">
+									<input type="hidden" name="id" value="${message.id}"> <input
+										type="submit" value="削除">
 								</form>
 							</div>
 
