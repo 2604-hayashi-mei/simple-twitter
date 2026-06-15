@@ -13,13 +13,13 @@ import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
 
 @WebServlet(urlPatterns = { "/deleteMessage" })
-public class DeleteServlet extends HttpServlet {
+public class DeleteMessageServlet extends HttpServlet {
 	/**
 	 * ロガーインスタンスの生成
 	 */
 	Logger log = Logger.getLogger("twitter");
 
-	public DeleteServlet() {
+	public DeleteMessageServlet() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
 	}
@@ -33,13 +33,12 @@ public class DeleteServlet extends HttpServlet {
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
-		String idParam = request.getParameter("id");
+		String messageId = request.getParameter("id");
 
 		//int型に変換
-		int tweetId = Integer.parseInt(idParam);
+		int tweetId = Integer.parseInt(messageId);
 		//サービス呼び出して命令
 		new MessageService().delete(tweetId);
-
 		//処理が終わったらトップへ
 		response.sendRedirect("./");
 	}

@@ -37,10 +37,12 @@ public class EditServlet extends HttpServlet {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
+		
+		List<String> errorMessages = new ArrayList<String>();
+		
 		//IDキャッチ
-		String messageIdParam = request.getParameter("id");
-		if (messageIdParam == null || messageIdParam.isEmpty() || !messageIdParam.matches("^[0-9]+$")) {
-			List<String> errorMessages = new ArrayList<String>();
+		String messageId = request.getParameter("id");
+		if (messageId == null || StringUtils.isBlank(messageId) || !messageId.matches("^[0-9]+$")) {
 			errorMessages.add("不正なパラメータが入力されました");
 
 			HttpSession session = request.getSession();
@@ -49,12 +51,11 @@ public class EditServlet extends HttpServlet {
 			return;
 		}
 		//ID変換
-		int tweetId = Integer.parseInt(messageIdParam);
+		int tweetId = Integer.parseInt(messageId);
 		//サービス呼び出し
 		Message message = new MessageService().select(tweetId);
 
 		if (message == null) {
-			List<String> errorMessages = new ArrayList<String>();
 			errorMessages.add("不正なパラメータが入力されました");
 			request.getSession().setAttribute("errorMessages", errorMessages);
 			response.sendRedirect("./");
@@ -78,23 +79,16 @@ public class EditServlet extends HttpServlet {
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
-		String messageIdParam = request.getParameter("id");
+		String messageId = request.getParameter("id");
 		String text = request.getParameter("text");
 
-		if (messageIdParam != null && text != null) {
-
 			//文字列をint型に変換
-			int tweetId = Integer.parseInt(messageIdParam);
-
+			int tweetId = Integer.parseInt(messageId);
 			List<String> errorMessages = new ArrayList<String>();
 
 			if (!isValid(text, errorMessages)) {
-				//テキストとID詰めなおし
-				Message message = new Message();
-				message.setId(tweetId);
-				message.setText(text);
 
-				request.setAttribute("message", message);
+				request.setAttribute("id", messageId);
 				request.setAttribute("errorMessages", errorMessages);
 
 				request.getRequestDispatcher("/edit.jsp").forward(request, response);
@@ -107,7 +101,6 @@ public class EditServlet extends HttpServlet {
 
 			response.sendRedirect("./");
 		}
-	}
 
 	private boolean isValid(String text, List<String> errorMessages) {
 
