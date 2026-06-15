@@ -42,7 +42,7 @@ public class EditServlet extends HttpServlet {
 		
 		//IDキャッチ
 		String messageId = request.getParameter("id");
-		if (messageId == null || StringUtils.isBlank(messageId) || !messageId.matches("^[0-9]+$")) {
+		if (StringUtils.isBlank(messageId) || !messageId.matches("^[0-9]+$")) {
 			errorMessages.add("不正なパラメータが入力されました");
 
 			HttpSession session = request.getSession();
