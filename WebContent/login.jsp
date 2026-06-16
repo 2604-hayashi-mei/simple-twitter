@@ -22,6 +22,15 @@
 				</div>
 			</c:if>
 			
+			<c:set var="filterError" value="${sessionScope.filterError}" />
+			<c:if test="${ not empty filterError }">
+				<div class="errorMessages">
+					<ul>
+						<li><c:out value="${filterError}" /></li>
+					</ul>
+				</div>
+				<c:remove var="filterError" scope="session" />
+			</c:if>
 			<form action="login" method="post"><br />
 				<label for="accountOrEmail">アカウント名かメールアドレス</label>
 				<input name="accountOrEmail" id="accountOrEmail"/> <br />

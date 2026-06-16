@@ -49,8 +49,18 @@
 			</div>
 			<c:remove var="errorMessages" scope="session" />
 		</c:if>
-
+		
 		<div class="form-area">
+			<div class="filter-area" style="margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;">
+				<form action="./index.jsp" method="get" style="margin: 0;">
+					<label for="startDate">日付：</label>
+					<input type="date" name="startDate" id="startDate" value="${requestScope.startDate}">
+					<span> ～ </span>
+					<input type="date" name="endDate" id="endDate" value="${requestScope.endDate}">
+					<input type="submit" value="検索" style="margin-left: 10px;">
+					<a href="./index.jsp" style="margin-left: 10px; font-size: 0.9em; color: #666;">クリア</a>
+				</form>
+			</div>
 			<c:if test="${ isShowMessageForm }">
 				<form action="message" method="post">
 					いま、どうしてる？<br />
@@ -77,26 +87,35 @@
 						<fmt:formatDate value="${message.createdDate}"
 							pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
-					<div class="comments-area"
-						style="margin-left: 30px; background-color: #f9f9f9; padding: 5px 10px; border-radius: 5px;">
+					<div class="comments-area" style="padding: 10px 0;">
 						<c:forEach items="${comments}" var="comment">
 							<c:if test="${comment.messageId == message.id}">
-								<div class="comment"
-									style="border-top: 1px dashed #eee; padding: 5px 0;">
-									<span style="font-size: 0.8em; color: #555;">返信:</span>
-								<div class="comment-text"
-										style="white-space: pre-wrap; font-size: 0.9em;">
-										<c:out value="${comment.text}" />
+								<div class="comment" style="border-top: 1px dashed #eee; padding: 10px 0; margin-top: 10px;">
+									
+									<div class="account-name">
+										<span class="account"> 
+											<c:out value="${comment.account}" />
+										</span>
+										<span class="name"><c:out value="${comment.name}" /></span>
 									</div>
+
+									<div class="text" style="white-space: pre-wrap;"><c:out value="${comment.text}" /></div>
+									
+									<div class="date">
+										<fmt:formatDate value="${comment.createdDate}"
+											pattern="yyyy/MM/dd HH:mm:ss" />
+									</div>
+
 								</div>
 							</c:if>
 						</c:forEach>
 					</div>
 					<c:if test="${ not empty loginUser }">
-						<div class="comment-form-area" style="margin-left: 30px; margin-top: 10px;">
+						<div class="comment-form-area" style="margin-top: 10px;">
 							<form action="comment" method="post" style="margin: 0;">
 								<input type="hidden" name="messageId" value="${message.id}">
-								<input type="text" name="text" placeholder="返信を入力..." size="60" required>
+								<textarea name="text" cols="100" rows="3" class="tweet-box"></textarea>
+								<br />
 								<input type="submit" value="返信">
 							</form>
 						</div>
