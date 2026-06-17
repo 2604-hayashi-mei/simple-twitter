@@ -82,17 +82,16 @@ public class MessageService {
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String currentDateTime = sdf.format(now);
 
-			if (!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+			if (!StringUtils.isEmpty(startDate)) {
 				start = startDate + " 00:00:00";
-				end = endDate + " 23:59:59";
-			} else if (!StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate)) {
-				start = startDate + " 00:00:00";
-				end = currentDateTime;
-			} else if (StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+			} else {
+				// デフォルト値
 				start = "2026-06-01 00:00:00";
+			}
+			if (!StringUtils.isEmpty(endDate)) {
 				end = endDate + " 23:59:59";
 			} else {
-				start = "2026-06-01 00:00:00";
+				// デフォルト値
 				end = currentDateTime;
 			}
 

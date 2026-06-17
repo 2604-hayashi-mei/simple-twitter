@@ -17,6 +17,7 @@ public class CommentDao {
 	 * ロガーインスタンスの生成
 	 */
 	Logger log = Logger.getLogger("twitter");
+
 	/**
 	 * デフォルトコンストラクタ
 	 * アプリケーションの初期化を実施する。
@@ -25,13 +26,13 @@ public class CommentDao {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
 	}
-	
+
 	public void insert(Connection connection, Comment comment) {
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
-		
+
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
@@ -48,13 +49,13 @@ public class CommentDao {
 			sql.append("    CURRENT_TIMESTAMP, "); // created_date
 			sql.append("    CURRENT_TIMESTAMP "); // updated_date
 			sql.append(")");
-			
+
 			ps = connection.prepareStatement(sql.toString());
-			
+
 			ps.setInt(1, comment.getUserId());
 			ps.setInt(2, comment.getMessageId());
 			ps.setString(3, comment.getText());
-			
+
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {

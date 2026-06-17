@@ -54,10 +54,10 @@
 			<div class="filter-area" style="margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;">
 				<form action="./" method="get" style="margin: 0;">
 					<label for="startDate">日付：</label>
-					<input type="date" name="startDate" id="startDate" value="${requestScope.startDate}">
+					<input type="date" name="startDate" value="${requestScope.startDate}">
 					<span> ～ </span>
-					<input type="date" name="endDate" id="endDate" value="${requestScope.endDate}">
-					<input type="submit" value="検索" style="margin-left: 10px;">
+					<input type="date" name="endDate" value="${requestScope.endDate}">
+					<input type="submit" value="絞込" style="margin-left: 10px;">
 					<a href="./index.jsp" style="margin-left: 10px; font-size: 0.9em; color: #666;">クリア</a>
 				</form>
 			</div>	
@@ -84,8 +84,7 @@
 					<div class="text" style="white-space: pre-wrap;"><c:out value="${message.text}" /></div>
 
 					<div class="date">
-						<fmt:formatDate value="${message.createdDate}"
-							pattern="yyyy/MM/dd HH:mm:ss" />
+						<fmt:formatDate value="${message.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
 					</div>
 					<div class="comments-area" style="padding: 10px 0;">
 						<c:forEach items="${comments}" var="comment">
@@ -102,8 +101,7 @@
 									<div class="text" style="white-space: pre-wrap;"><c:out value="${comment.text}" /></div>
 									
 									<div class="date">
-										<fmt:formatDate value="${comment.createdDate}"
-											pattern="yyyy/MM/dd HH:mm:ss" />
+										<fmt:formatDate value="${comment.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
 									</div>
 
 								</div>
@@ -130,8 +128,8 @@
 
 							<div class="delete-area" style="display: inline-block;">
 								<form action="deleteMessage" method="post" style="margin: 0;">
-									<input type="hidden" name="id" value="${message.id}"> <input
-										type="submit" value="削除">
+									<input type="hidden" name="id" value="${message.id}"> 
+									<input type="submit" value="削除">
 								</form>
 							</div>
 
