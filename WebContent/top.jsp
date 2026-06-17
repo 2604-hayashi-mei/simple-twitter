@@ -52,7 +52,7 @@
 		
 		<div class="form-area">
 			<div class="filter-area" style="margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;">
-				<form action="./index.jsp" method="get" style="margin: 0;">
+				<form action="./" method="get" style="margin: 0;">
 					<label for="startDate">日付：</label>
 					<input type="date" name="startDate" id="startDate" value="${requestScope.startDate}">
 					<span> ～ </span>
@@ -60,7 +60,7 @@
 					<input type="submit" value="検索" style="margin-left: 10px;">
 					<a href="./index.jsp" style="margin-left: 10px; font-size: 0.9em; color: #666;">クリア</a>
 				</form>
-			</div>
+			</div>	
 			<c:if test="${ isShowMessageForm }">
 				<form action="message" method="post">
 					いま、どうしてる？<br />

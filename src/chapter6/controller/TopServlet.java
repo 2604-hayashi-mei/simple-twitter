@@ -59,7 +59,7 @@ public class TopServlet extends HttpServlet {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		List<UserMessage> messages = new MessageService().select(userId, startDate, endDate);
-		
+
 		List<Comment> comments = new CommentService().select(messages);
 		request.setAttribute("comments", comments);
 

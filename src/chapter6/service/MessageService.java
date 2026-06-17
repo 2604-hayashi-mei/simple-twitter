@@ -74,28 +74,28 @@ public class MessageService {
 			if (!StringUtils.isEmpty(userId)) {
 				id = Integer.parseInt(userId);
 			}
-			
+
 			String start = "";
-	        String end = "";
-			
-	        java.util.Date now = new java.util.Date();
-	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	        String currentDateTime = sdf.format(now);
-	        
-	        if (!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
-	        	start = startDate + " 00:00:00";
-	        	end = endDate + " 23:59:59";
-	        } else if(!StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate)) {
-	        	start = startDate + " 00:00:00";
-	        	end = currentDateTime;
-	        } else if(StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
-	        	start = "2026-06-01 00:00:00";
-	        	end = endDate + " 23:59:59";
-	        }else {
-	        	start = "2026-06-01 00:00:00";
-	        	end = currentDateTime;
-	        }
-	        
+			String end = "";
+
+			java.util.Date now = new java.util.Date();
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentDateTime = sdf.format(now);
+
+			if (!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+				start = startDate + " 00:00:00";
+				end = endDate + " 23:59:59";
+			} else if (!StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate)) {
+				start = startDate + " 00:00:00";
+				end = currentDateTime;
+			} else if (StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+				start = "2026-06-01 00:00:00";
+				end = endDate + " 23:59:59";
+			} else {
+				start = "2026-06-01 00:00:00";
+				end = currentDateTime;
+			}
+
 			/*
 			 * messageDao.selectに引数としてInteger型のidを追加
 			 * idがnullだったら全件取得する
