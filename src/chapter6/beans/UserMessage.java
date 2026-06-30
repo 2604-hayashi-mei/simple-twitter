@@ -10,6 +10,7 @@ public class UserMessage implements Serializable {
     private int userId;
     private String text;
     private Date createdDate;
+    private int likeCount;
     
     public int getId() {
     	return id;
@@ -57,5 +58,22 @@ public class UserMessage implements Serializable {
     
     public void setCreatedDate(Date createdDate) {
     	this.createdDate = createdDate;
+    }
+    
+    public int getLikeCount() {
+    	return likeCount;
+    }
+    
+    public void setLikeCount(int likeCount) {
+    	this.likeCount = likeCount;
+    }
+    private boolean following;
+
+    public boolean isFollowing() {
+    	return following;
+    }
+
+    public void setFollowing(boolean following) {
+    	this.following = following;
     }
 }

@@ -59,7 +59,7 @@ public class MessageService {
 		}
 	}
 
-	public List<UserMessage> select(String userId, String startDate, String endDate) {
+	public List<UserMessage> select(String userId, int loginUserId, String startDate, String endDate) {
 		final int LIMIT_NUM = 1000;
 
 		Connection connection = null;
@@ -100,7 +100,7 @@ public class MessageService {
 			 * idがnullだったら全件取得する
 			 * idがnull以外だったら、その値に対応するユーザーIDの投稿を取得する
 			 */
-			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM, start, end);
+			List<UserMessage> messages = new UserMessageDao().select(connection, id, loginUserId, LIMIT_NUM, start, end);
 			commit(connection);
 
 			return messages;
@@ -195,6 +195,31 @@ public class MessageService {
 			rollback(connection);
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+	
+	public List<UserMessage> selectTimeline(int userId) {
+
+		Connection connection = null;
+
+		try {
+			connection = getConnection();
+
+			List<UserMessage> messages =
+					new UserMessageDao().selectTimeline(connection, userId);
+
+			commit(connection);
+
+			return messages;
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
 			throw e;
 		} finally {
 			close(connection);

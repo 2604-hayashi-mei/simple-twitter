@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>簡易Twitter</title>
+<title>タイムライン</title>
 <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -27,9 +27,7 @@
 		<c:if test="${ not empty loginUser }">
 			<div class="profile">
 				<div class="name">
-					<h2>
-						<c:out value="${loginUser.name}" />
-					</h2>
+					<h2>タイムライン</h2>
 				</div>
 				<div class="account">
 					@
