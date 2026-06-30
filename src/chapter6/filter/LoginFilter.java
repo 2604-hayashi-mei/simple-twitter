@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 // フィルターを適用する対象のページ
-@WebFilter(urlPatterns = { "/setting", "/edit" })
+@WebFilter(urlPatterns = { "/setting", "/edit", "/editComment" })
 public class LoginFilter implements Filter {
 
 	@Override
